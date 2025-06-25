@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import MovieCard from "./components/MovieCard";
 import Search from "./components/Search";
 import Spinner from "./components/Spinner";
 
@@ -58,7 +59,7 @@ const App = () => {
     fetchMovies(); //Runs only on the first render
   }, []);
 
-  // console.log(moviesList);
+  console.log(movieList);
 
   return (
     <main>
@@ -75,7 +76,7 @@ const App = () => {
             <p className="text-red-700">{searchTerm}</p>
           </header>
           <section className="all-movies">
-            <h2 className="mt-[40px]">All Movies</h2>
+            <h2 className="mt-[40px]">Popular</h2>
             {isLoading ? (
               <Spinner />
             ) : errorMessage ? (
@@ -83,9 +84,7 @@ const App = () => {
             ) : (
               <ul>
                 {movieList.map((movie) => (
-                  <p className="text-white" key={movie.id}>
-                    {movie.title}
-                  </p>
+                  <MovieCard key={movie.id} movie={movie}></MovieCard>
                 ))}
               </ul>
             )}
