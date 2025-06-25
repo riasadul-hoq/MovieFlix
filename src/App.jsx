@@ -19,12 +19,14 @@ const App = () => {
   const [movieList, setMovieList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (query = "Aladdin") => {
     setIsLoading(true);
     setErrorMessage("");
     // Reset error state before fetching
     try {
-      const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+      const endpoint = query
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
       const response = await fetch(endpoint, API_OPTIONS);
       // throw new Error(`Error thrown, Failed to fetch movies`);
@@ -56,10 +58,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchMovies(); //Runs only on the first render
-  }, []);
+    fetchMovies(searchTerm); //Runs only on the first render
+  }, [searchTerm]);
 
-  console.log(movieList);
+  // console.log(movieList);
 
   return (
     <main>
@@ -73,7 +75,7 @@ const App = () => {
               Without the Hassle
             </h1>
             <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            <p className="text-red-700">{searchTerm}</p>
+            {/* <p className="text-red-700">{searchTerm}</p> */}
           </header>
           <section className="all-movies">
             <h2 className="mt-[40px]">Popular</h2>
