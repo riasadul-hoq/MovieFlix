@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://riasadul-hoq.github.io/MovieFlix",
+  "homepage": "https://riasadulhoq.github.io/MovieFlix",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -17,7 +17,9 @@
     "gh-pages": "^6.3.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tailwindcss": "^4.1.10"
+    "react-use": "^17.6.0",
+    "tailwindcss": "^4.1.10",
+    "use-debounce": "^10.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
