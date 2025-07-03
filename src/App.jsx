@@ -1,3 +1,5 @@
+// App.jsx - Main application component for MovieFlix
+// Handles search, trending, and popular movies display
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 // import { useDebounce } from 'use-debounce';
@@ -6,6 +8,7 @@ import MovieCard from "./components/MovieCard";
 import Search from "./components/Search";
 import Spinner from "./components/Spinner";
 
+// TMDb API configuration
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const API_OPTIONS = {
@@ -17,19 +20,21 @@ const API_OPTIONS = {
 };
 
 const App = () => {
+  // State for search input and debounced value
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
+  // State for movie list and loading/error states
   const [movieList, setMovieList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // State for trending movies and their loading/error states
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [isTrendingLoading, setIsTrendingLoading] = useState(false);
   const [errorTrendingMessage, setErrorTrendingMessage] = useState("");
 
-  // const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
-
+  // Debounce the search term to avoid excessive API calls
   useDebounce(
     () => {
       setDebouncedSearchTerm(searchTerm);
@@ -38,8 +43,9 @@ const App = () => {
     [searchTerm]
   );
 
-  // console.log("Trending Movies:", trendingMovies);
-
+  // fetchMovies - Fetches movies from TMDb API based on search query
+  // If query is empty, fetches popular movies
+  // Updates movieList and errorMessage state
   const fetchMovies = async (query = "") => {
     setIsLoading(true);
     setErrorMessage("");
@@ -59,6 +65,7 @@ const App = () => {
       const data = await response.json();
       // console.log(data);
 
+      // Handle TMDb API error response
       if (data.Response === "False") {
         setErrorMessage(data.Error || "Data Error, Failed to fetch movies");
         setMovieList([]);
@@ -68,6 +75,7 @@ const App = () => {
       setMovieList(data.results || []);
       // console.log("Movies fetched successfully:", data.results);
 
+      // Update search count in Appwrite if a search was performed
       if (query && data.results.length > 0) {
         await updateSearchCount(searchTerm, data.results[0]);
       }
@@ -82,6 +90,8 @@ const App = () => {
     }
   };
 
+  // loadTrendingMovies - Loads trending movies from Appwrite backend
+  // Updates trendingMovies and errorTrendingMessage state
   const loadTrendingMovies = async () => {
     setIsTrendingLoading(true);
     setErrorTrendingMessage("");
@@ -100,16 +110,17 @@ const App = () => {
     }
   };
 
+  // Fetch movies when the debounced search term changes
   useEffect(() => {
     fetchMovies(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
+  // Load trending movies on initial mount
   useEffect(() => {
     loadTrendingMovies();
   }, []);
 
-  // console.log(movieList);
-
+  // Render main UI
   return (
     <main>
       <div className="pattern">
@@ -121,9 +132,11 @@ const App = () => {
               Find <span className="text-gradient">Movies</span> You’ll Love
               Without the Hassle
             </h1>
+            {/* Search bar for user input */}
             <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             {/* <p className="text-red-700">{searchTerm}</p> */}
           </header>
+          {/* Trending movies section */}
           {trendingMovies.length > 0 && (
             <section className="trending">
               <h2>Trending</h2>
@@ -143,6 +156,7 @@ const App = () => {
               )}
             </section>
           )}
+          {/* Popular movies section */}
           <section className="all-movies">
             <h2>Popular</h2>
             {isLoading ? (

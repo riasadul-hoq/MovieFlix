@@ -1,3 +1,6 @@
+// Spinner.jsx - Loading spinner component for MovieFlix
+// Used to indicate loading state in the UI
+
 const Spinner = () => {
   return (
     <div role="status" className="my-5">
